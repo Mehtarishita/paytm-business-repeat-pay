@@ -4,9 +4,12 @@ import { db } from "../lib/db";
 import { useNavigate } from "react-router-dom";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 
+import { useTheme } from "../components/ThemeProvider";
+
 export const DemoControlPanel = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState(db.getSession());
+  const { theme, setTheme } = useTheme();
 
   const handleReset = () => {
     if (confirm("Reset all demo data to seed state?")) {
@@ -36,16 +39,16 @@ export const DemoControlPanel = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F5F9FC]">
+    <div className="flex flex-col h-full bg-[#F5F9FC] dark:bg-slate-900 transition-colors">
       <TopBar title="Demo controls" />
       
       <div className="p-4 flex-1 overflow-y-auto pb-24">
-        <div className="bg-red-50 border border-red-200 p-4 rounded-xl mb-6">
-          <div className="flex items-start text-red-800">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 p-4 rounded-xl mb-6">
+          <div className="flex items-start text-red-800 dark:text-red-400">
             <AlertTriangle className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
             <div>
               <p className="font-bold text-sm">Demo controls — not part of product</p>
-              <p className="text-xs mt-1 text-red-700">
+              <p className="text-xs mt-1 text-red-700 dark:text-red-300">
                 Use these buttons to simulate backend outcomes during presentation.
               </p>
             </div>
@@ -53,11 +56,35 @@ export const DemoControlPanel = () => {
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 space-y-3">
-            <h3 className="font-bold text-gray-900 text-sm uppercase tracking-wide">Data & State</h3>
+          <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 space-y-3">
+            <h3 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wide">Appearance</h3>
+            <div className="flex space-x-2">
+              <button 
+                onClick={() => setTheme("light")}
+                className={`flex-1 py-2.5 rounded-lg text-sm font-bold ${theme === 'light' ? 'bg-[#00BAF2] text-white' : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300'}`}
+              >
+                Light
+              </button>
+              <button 
+                onClick={() => setTheme("dark")}
+                className={`flex-1 py-2.5 rounded-lg text-sm font-bold ${theme === 'dark' ? 'bg-[#00BAF2] text-white' : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300'}`}
+              >
+                Dark
+              </button>
+              <button 
+                onClick={() => setTheme("system")}
+                className={`flex-1 py-2.5 rounded-lg text-sm font-bold ${theme === 'system' ? 'bg-[#00BAF2] text-white' : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300'}`}
+              >
+                System
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 space-y-3">
+            <h3 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wide">Data & State</h3>
             <button 
               onClick={handleReset}
-              className="w-full bg-gray-100 text-gray-800 py-3 rounded-lg font-bold flex items-center justify-center"
+              className="w-full bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-gray-200 py-3 rounded-lg font-bold flex items-center justify-center hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
             >
               <RefreshCw className="w-4 h-4 mr-2" />
               Reset demo to seed data

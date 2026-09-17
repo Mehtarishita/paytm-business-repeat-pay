@@ -1,9 +1,12 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-paytm-blue: #00BAF2;
   --color-paytm-deep-blue: #002970;
   --color-paytm-bg: #F5F9FC;
+  --color-paytm-bg-dark: #0f172a;
   --color-success: #16a34a;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
@@ -13,6 +16,11 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--color-paytm-bg);
   color: #1F2937;
+}
+
+.dark body {
+  background-color: var(--color-paytm-bg-dark);
+  color: #f8fafc;
 }
 
 /* Hide scrollbar for clean mobile feel */
