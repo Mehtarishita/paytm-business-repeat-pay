@@ -28,11 +28,16 @@ export const History = () => {
     const rec = getRecipient(p.recipientId);
     const searchLower = search.toLowerCase();
     
+    const formattedDate = format(p.createdAt, "d MMM · h:mm a").toLowerCase();
+    const amountStr = p.amount.toString();
+    
     const matchesSearch = 
       (rec?.nickname.toLowerCase().includes(searchLower)) ||
       (rec?.accountName.toLowerCase().includes(searchLower)) ||
       (p.reference?.toLowerCase().includes(searchLower)) ||
-      (p.demoTransactionId?.toLowerCase().includes(searchLower));
+      (p.demoTransactionId?.toLowerCase().includes(searchLower)) ||
+      (amountStr.includes(searchLower)) ||
+      (formattedDate.includes(searchLower));
       
     const matchesStatus = statusFilter === "ALL" || p.status === statusFilter;
     

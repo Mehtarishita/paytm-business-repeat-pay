@@ -151,10 +151,10 @@ export const PaymentForm = () => {
       <div className="bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700 p-4 sticky bottom-0 z-40 transition-colors">
         <button 
           onClick={handleReview}
-          disabled={!amount || parseInt(amount) <= 0}
+          disabled={!amount || parseInt(amount) <= 0 || duplicateWarning !== null}
           className="w-full bg-[#00BAF2] text-white py-3.5 rounded-xl font-bold shadow-sm text-lg disabled:opacity-50"
         >
-          Review payment
+          {duplicateWarning ? "Acknowledge duplicate to continue" : "Review payment"}
         </button>
       </div>
     </div>

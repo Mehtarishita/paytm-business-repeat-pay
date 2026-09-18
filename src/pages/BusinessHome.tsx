@@ -74,12 +74,20 @@ export const BusinessHome = () => {
 
       {pendingPayments.length > 0 && (
         <div 
-          onClick={() => navigate("/history?status=PENDING")}
+          onClick={() => {
+            if (pendingPayments.length === 1) {
+              navigate(`/payments/${pendingPayments[0].id}`);
+            } else {
+              navigate("/history?status=PENDING");
+            }
+          }}
           className="bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-900/30 p-3 rounded-xl flex items-center justify-between cursor-pointer active:scale-[0.98] transition-transform"
         >
           <div className="flex items-center space-x-3">
             <AlertCircle className="text-orange-500 w-5 h-5" />
-            <span className="text-sm font-medium text-orange-800 dark:text-orange-400">{pendingPayments.length} payments need attention</span>
+            <span className="text-sm font-medium text-orange-800 dark:text-orange-400">
+              {pendingPayments.length} pending payment{pendingPayments.length !== 1 ? 's' : ''} — View status
+            </span>
           </div>
           <ChevronRight className="w-5 h-5 text-orange-400" />
         </div>

@@ -36,6 +36,16 @@ export const DemoControlPanel = () => {
     } else {
       alert("No pending payments found.");
     }
+  const reversePayment = () => {
+    const payments = db.getPayments();
+    const success = payments.find(p => p.status === "SUCCESS");
+    if (success) {
+      db.updatePaymentStatus(success.id, "REVERSED");
+      alert(`First successful payment reversed.`);
+      setSession(db.getSession());
+    } else {
+      alert("No successful payments to reverse.");
+    }
   };
 
   return (
@@ -91,20 +101,26 @@ export const DemoControlPanel = () => {
             </button>
           </div>
 
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 space-y-3">
-            <h3 className="font-bold text-gray-900 text-sm uppercase tracking-wide">Resolve Pending</h3>
+          <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 space-y-3">
+            <h3 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wide">Simulate Actions</h3>
             <div className="flex space-x-2">
               <button 
                 onClick={() => resolvePending("SUCCESS")}
-                className="flex-1 bg-green-50 border border-green-200 text-green-700 py-2.5 rounded-lg text-sm font-bold"
+                className="flex-1 bg-green-50 border border-green-200 text-green-700 py-2.5 rounded-lg text-xs font-bold"
               >
                 Pending → Success
               </button>
               <button 
                 onClick={() => resolvePending("FAILED")}
-                className="flex-1 bg-red-50 border border-red-200 text-red-700 py-2.5 rounded-lg text-sm font-bold"
+                className="flex-1 bg-red-50 border border-red-200 text-red-700 py-2.5 rounded-lg text-xs font-bold"
               >
                 Pending → Failed
+              </button>
+              <button 
+                onClick={reversePayment}
+                className="flex-1 bg-gray-100 border border-gray-300 text-gray-700 py-2.5 rounded-lg text-xs font-bold"
+              >
+                Success → Reversed
               </button>
             </div>
           </div>

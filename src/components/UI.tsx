@@ -24,10 +24,10 @@ export const TopBar = ({ title, showBack = true, onBack }: { title: string, show
 
 export const StatusBadge = ({ status }: { status: PaymentStatus }) => {
   const config = {
-    SUCCESS: { bg: "bg-green-100 dark:bg-green-900/30", text: "text-green-800 dark:text-green-400", label: "SUCCESS" },
-    PENDING: { bg: "bg-orange-100 dark:bg-orange-900/30", text: "text-orange-800 dark:text-orange-400", label: "PENDING" },
-    FAILED: { bg: "bg-red-100 dark:bg-red-900/30", text: "text-red-800 dark:text-red-400", label: "FAILED" },
-    REVERSED: { bg: "bg-red-100 dark:bg-red-900/30", text: "text-red-800 dark:text-red-400", label: "REVERSED" },
+    SUCCESS: { bg: "bg-green-100 dark:bg-green-900/30", text: "text-green-800 dark:text-green-400", label: "PAYMENT SUCCESSFUL" },
+    PENDING: { bg: "bg-orange-100 dark:bg-orange-900/30", text: "text-orange-800 dark:text-orange-400", label: "AWAITING CONFIRMATION" },
+    FAILED: { bg: "bg-red-100 dark:bg-red-900/30", text: "text-red-800 dark:text-red-400", label: "PAYMENT FAILED" },
+    REVERSED: { bg: "bg-red-100 dark:bg-red-900/30", text: "text-red-800 dark:text-red-400", label: "PAYMENT REVERSED" },
     PROCESSING: { bg: "bg-blue-100 dark:bg-blue-900/30", text: "text-blue-800 dark:text-blue-400", label: "PROCESSING" },
     DRAFT: { bg: "bg-gray-100 dark:bg-slate-700", text: "text-gray-800 dark:text-slate-300", label: "DRAFT" },
   };

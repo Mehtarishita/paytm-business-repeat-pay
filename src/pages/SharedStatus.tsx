@@ -7,34 +7,77 @@ import { format } from "date-fns";
 
 export const SharedStatus = () => {
   const { token } = useParams();
-  const payment = db.getPaymentByToken(token || "");
+  const [payment, setPayment] = React.useState<any>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(false);
 
-  if (!payment) {
+  React.useEffect(() => {
+    const fetchPayment = async () => {
+      try {
+        const response = await fetch(`/api/share/${token}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch");
+        }
+        const data = await response.json();
+        setPayment(data);
+      } catch (err) {
+        console.error(err);
+        // Fallback to local DB if backend fails
+        const localPayment = db.getPaymentByToken(token || "");
+        if (localPayment) {
+          setPayment({
+            ...localPayment,
+            payerName: "Sharma General Store",
+            recipientAccountName: db.getRecipient(localPayment.recipientId)?.accountName || "Unknown",
+            recipientAddress: db.getRecipient(localPayment.recipientId)?.demoAddress || "Unknown"
+          });
+        } else {
+          setError(true);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPayment();
+  }, [token]);
+
+  if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#F5F9FC] p-4 text-center">
-        <h1 className="text-xl font-bold text-gray-900 mb-2">Link unavailable</h1>
-        <p className="text-gray-500">This payment-status link is no longer available.</p>
+        <div className="w-8 h-8 border-4 border-[#00BAF2] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p className="text-gray-500 font-medium">Loading status...</p>
       </div>
     );
   }
 
-  const recipient = db.getRecipient(payment.recipientId);
-  if (!recipient) return null;
+  if (error || !payment) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-[#F5F9FC] p-4 text-center">
+        <XCircle className="w-12 h-12 text-gray-400 mb-4" />
+        <h1 className="text-xl font-bold text-gray-900 mb-2">Link unavailable</h1>
+        <p className="text-gray-500">This payment-status link is invalid, expired, or no longer available.</p>
+      </div>
+    );
+  }
 
   const isSuccess = payment.status === "SUCCESS";
   const isPending = payment.status === "PENDING";
   
   let statusIcon = <CheckCircle2 className="w-10 h-10 text-green-500" />;
-  let statusText = "Successful";
+  let statusText = "Payment successful";
   let statusColor = "text-green-600";
   
   if (isPending) {
     statusIcon = <Clock className="w-10 h-10 text-orange-500" />;
-    statusText = "Pending";
+    statusText = "Awaiting confirmation";
     statusColor = "text-orange-600";
-  } else if (payment.status !== "SUCCESS") {
+  } else if (payment.status === "FAILED") {
     statusIcon = <XCircle className="w-10 h-10 text-red-500" />;
-    statusText = payment.status.charAt(0) + payment.status.slice(1).toLowerCase();
+    statusText = "Payment failed";
+    statusColor = "text-red-600";
+  } else if (payment.status === "REVERSED") {
+    statusIcon = <XCircle className="w-10 h-10 text-red-500" />;
+    statusText = "Payment reversed";
     statusColor = "text-red-600";
   }
 
@@ -72,15 +115,15 @@ export const SharedStatus = () => {
             </div>
             <div>
               <p className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-1">To</p>
-              <p className="font-semibold text-gray-900">{recipient.accountName}</p>
+              <p className="font-semibold text-gray-900">{payment.recipientAccountName || "Unknown"}</p>
             </div>
             <div>
               <p className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-1">Payment address</p>
-              <p className="font-medium text-gray-800">{maskAddress(recipient.demoAddress)}</p>
+              <p className="font-medium text-gray-800">{maskAddress(payment.recipientAddress || "")}</p>
             </div>
             {payment.reference && (
               <div>
-                <p className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-1">Reference</p>
+                <p className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-1">Reference (Added by payer)</p>
                 <p className="font-medium text-gray-800">{payment.reference}</p>
               </div>
             )}
@@ -111,7 +154,7 @@ export const SharedStatus = () => {
             Refresh status
           </button>
           <p className="text-[10px] text-gray-400 mt-3 font-medium">
-            Last updated {format(payment.updatedAt, "h:mm a")}
+            Status last updated {format(payment.updatedAt, "d MMM yyyy, h:mm a")}
           </p>
         </div>
       </div>

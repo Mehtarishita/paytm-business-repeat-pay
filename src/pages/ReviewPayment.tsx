@@ -103,7 +103,7 @@ export const ReviewPayment = () => {
           {isProcessing ? (
             <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           ) : (
-            "Confirm demo payment"
+            "Continue to authorisation"
           )}
         </button>
         <button 
