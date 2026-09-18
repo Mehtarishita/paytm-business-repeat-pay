@@ -36,6 +36,8 @@ export const DemoControlPanel = () => {
     } else {
       alert("No pending payments found.");
     }
+  };
+
   const reversePayment = () => {
     const payments = db.getPayments();
     const success = payments.find(p => p.status === "SUCCESS");
