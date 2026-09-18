@@ -72,7 +72,7 @@ const getInitialPayments = (): Payment[] => [
     amount: 5200,
     reference: "Inventory",
     category: "Inventory",
-    status: "PENDING",
+    status: "SUCCESS",
     demoTransactionId: "DEMO-PAY-004",
     createdAt: Date.now() - 2 * 24 * 60 * 60 * 1000,
     updatedAt: Date.now() - 2 * 24 * 60 * 60 * 1000,
